@@ -1,7 +1,10 @@
-name: secure-code-signing
-location: eastus2
+name: secure-windows-app
 services:
-  webapp:
-    project: ./src
-    language: node
+  app:
+    language: nodejs
     host: appservice
+    path: src
+
+infra:
+  bicep: infra/main.bicep
+  parameters: infra/main.parameters.json
