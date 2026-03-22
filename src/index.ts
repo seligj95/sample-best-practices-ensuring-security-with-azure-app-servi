@@ -4,9 +4,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello, Secure World! Your app is signed and deployed securely.');
+  res.send('Hello, Secure Code Signing with Azure App Service!');
 });
 
 app.listen(port, () => {
-  console.log(`App listening at http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
