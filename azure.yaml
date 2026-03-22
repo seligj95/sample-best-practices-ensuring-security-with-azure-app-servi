@@ -1,10 +1,11 @@
-name: secure-windows-app
+name: secure-code-signing
+location: eastus2
 services:
-  app:
+  web:
+    project: src
     language: nodejs
     host: appservice
-    path: src
-
-infra:
-  bicep: infra/main.bicep
-  parameters: infra/main.parameters.json
+    resourceGroup: ${AZURE_ENV_NAME}-rg
+    environmentVariables:
+      AZURE_ENV_NAME: ${AZURE_ENV_NAME}
+      AZURE_LOCATION: ${AZURE_LOCATION}
