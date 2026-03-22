@@ -1,4 +1,4 @@
-name: Validate and Deploy
+name: Validate CI/CD
 
 on:
   push:
@@ -6,41 +6,42 @@ on:
       - main
   pull_request:
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
-      - name: Install Azure Developer CLI
-        run: curl -fsSL https://aka.ms/install-azd.sh | bash
+    - name: Install Azure Developer CLI
+      run: curl -fsSL https://aka.ms/install-azd.sh | bash
 
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Initialize AZD Environment
-        run: azd init -e sample-ci-${{ github.run_id }} -l eastus2 --no-prompt
+    - name: Initialize AZD environment
+      run: azd init -e sample-ci-${{ github.run_id }} -l eastus2 --no-prompt
 
-      - name: Provision Infrastructure
-        run: azd provision --no-prompt
+    - name: Provision infrastructure
+      run: azd provision --no-prompt
 
-      - name: Deploy Application
-        run: azd deploy --no-prompt
+    - name: Deploy application
+      run: azd deploy --no-prompt
 
-      - name: Validate Deployment
-        run: |
-          APP_URL=$(azd env get-values --query "WEBAPP_URL" -o tsv)
-          curl -sf $APP_URL && echo "Validation successful!"
+    - name: Validate deployment
+      run: |
+        APP_URL=$(azd env get-values --query "app_url" -o tsv)
+        curl -sf $APP_URL
 
-      - name: Cleanup Resources
-        if: always()
-        run: azd down --force --purge --no-prompt
+    - name: Cleanup resources
+      if: always()
+      run: azd down --force --purge --no-prompt
