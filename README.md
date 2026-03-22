@@ -1,55 +1,47 @@
-# Secure Your Windows Apps with Azure: Code Signing Best Practices
+# Secure Code Signing for Windows Apps with Azure App Service
 
 ## Overview
-This sample demonstrates how to implement secure code signing for Windows applications deployed via Azure App Service. It integrates Azure Key Vault for certificate management, Azure DevOps or GitHub Actions for CI/CD automation, and Azure App Service for deployment.
+This sample demonstrates best practices for securely signing Windows applications deployed via Azure App Service using Azure Key Vault and CI/CD pipelines. It includes infrastructure as code, a sample application, and automated workflows to ensure end-to-end security.
 
 ## Architecture
 ```mermaid
 graph TD
-    A[Developer Workstation] -->|Push Code| B[GitHub Actions / Azure DevOps]
-    B -->|Code Signing| C[Azure Key Vault]
-    B -->|Deploy Signed App| D[Azure App Service]
-    C -->|Certificate Management| D
+    A[Developer] -->|Push Code| B[GitHub Actions]
+    B -->|OIDC Auth| C[Azure Key Vault]
+    C -->|Retrieve Certificate| D[Code Signing]
+    D -->|Deploy Signed App| E[Azure App Service]
 ```
 
 ## Prerequisites
 - Active Azure subscription
-- Azure CLI installed
-- GitHub account (or Azure DevOps setup)
-- Node.js installed
+- Azure CLI installed (`az`)
+- Node.js and npm installed
+- GitHub repository with OIDC authentication configured
 
 ## Quickstart
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/seligj95/sample-best-practices-ensuring-security-with-azure-app-servi.git
-   cd sample-best-practices-ensuring-security-with-azure-app-servi
-   ```
-2. Initialize Azure Developer CLI (azd):
-   ```bash
-   azd init
-   ```
-3. Provision resources:
-   ```bash
-   azd up
-   ```
-4. Deploy the application:
-   ```bash
-   azd deploy
-   ```
-5. Access the deployed app at the URL provided by `azd`.
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/seligj95/sample-best-practices-ensuring-security-with-azure-app-servi.git
+    cd sample-best-practices-ensuring-security-with-azure-app-servi
+    ```
+2. Provision resources and deploy the app:
+    ```bash
+    azd up
+    ```
+3. Access the deployed app via the URL output by `azd up`.
 
 ## Cost Estimate
-| Resource              | Tier       | Estimated Cost |
-|-----------------------|------------|----------------|
-| Azure App Service     | Free/Basic | Free/$5/month  |
-| Azure Key Vault       | Standard   | ~$5/month      |
-| Azure DevOps/GitHub   | Free       | Free           |
+| Resource             | Tier         | Estimated Cost |
+|----------------------|--------------|----------------|
+| App Service Plan     | Free         | $0             |
+| Azure Key Vault      | Standard     | ~$5/month      |
+| GitHub Actions       | Free         | $0             |
 
 ## Cleanup
-To delete the resources:
+To delete all resources:
 ```bash
 azd down
 ```
 
 ## Companion Blog Post
-Read the full blog post: [Secure Your Windows Apps with Azure: Code Signing Best Practices](https://example.com/blog/secure-windows-apps-azure-code-signing)
+For detailed explanations and walkthroughs, visit the [blog post](https://github.com/seligj95/seligj95.github.io/pull/4).
