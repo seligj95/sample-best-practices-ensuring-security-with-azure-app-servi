@@ -1,4 +1,8 @@
 {
-  "location": "eastus2",
-  "environmentName": "sample-environment"
+  "location": {
+    "value": "eastus2"
+  },
+  "environmentName": {
+    "value": "sample-env"
+  }
 }
