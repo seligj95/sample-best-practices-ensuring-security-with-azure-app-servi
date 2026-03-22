@@ -1,8 +1,4 @@
 {
-  "location": {
-    "value": "eastus2"
-  },
-  "environmentName": {
-    "value": "secure-code-signing"
-  }
+  "location": "eastus2",
+  "environmentName": "sample-environment"
 }
