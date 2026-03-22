@@ -14,13 +14,12 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup Azure Developer CLI
-        uses: azure/setup-azd@v1
+      - name: Install Azure Developer CLI
+        run: curl -fsSL https://aka.ms/install-azd.sh | bash
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -29,17 +28,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Provision Infrastructure
-        run: azd provision --environment sample-ci-${{ github.run_id }} --location eastus2
+      - name: Initialize Azure environment
+        run: azd init -e sample-ci-${{ github.run_id }} -l eastus2 --no-prompt
 
-      - name: Deploy Application
-        run: azd deploy
+      - name: Provision Azure resources
+        run: azd provision --no-prompt
 
-      - name: Validate Deployment
+      - name: Deploy application
+        run: azd deploy --no-prompt
+
+      - name: Validate deployment
         run: |
-          APP_URL=$(azd env get-values --query "WEB_APP_URL" -o tsv)
-          curl -f $APP_URL || exit 1
+          APP_URL=$(azd env get-values | grep "WEBAPP_URL" | awk '{print $2}')
+          curl -sf $APP_URL -o /dev/null || exit 1
 
-      - name: Cleanup Resources
+      - name: Cleanup resources
         if: always()
-        run: azd down --force --purge
+        run: azd down --force --purge --no-prompt
