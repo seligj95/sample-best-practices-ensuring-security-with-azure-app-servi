@@ -1,17 +1,7 @@
-name: secure-code-signing-sample
-metadata:
-  description: Sample project demonstrating secure code signing for Windows apps deployed via Azure App Service
-  owner: seligj95
-  tags:
-    - azure-app-service
-    - azure-key-vault
-    - code-signing
-
+name: secure-code-signing
+location: eastus2
 services:
   webapp:
-    project: src
-    language: nodejs
+    project: ./src
+    language: node
     host: appservice
-
-infra:
-  bicep: infra/main.bicep
