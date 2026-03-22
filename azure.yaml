@@ -1,3 +1,17 @@
-name: azure-code-signing-demo
-location: eastus2
-environment: dev
+name: secure-code-signing-sample
+metadata:
+  description: Sample project demonstrating secure code signing for Windows apps deployed via Azure App Service
+  owner: seligj95
+  tags:
+    - azure-app-service
+    - azure-key-vault
+    - code-signing
+
+services:
+  webapp:
+    project: src
+    language: nodejs
+    host: appservice
+
+infra:
+  bicep: infra/main.bicep
