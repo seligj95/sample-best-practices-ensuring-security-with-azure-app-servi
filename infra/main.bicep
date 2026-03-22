@@ -6,18 +6,16 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
   location: location
   sku: {
     name: 'F1'
-    capacity: 1
+    tier: 'Free'
   }
 }
 
 resource webApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: '${environmentName}-app'
+  name: '${environmentName}-webapp'
   location: location
+  serverFarmId: appServicePlan.id
   identity: {
     type: 'SystemAssigned'
-  }
-  properties: {
-    serverFarmId: appServicePlan.id
   }
 }
 
