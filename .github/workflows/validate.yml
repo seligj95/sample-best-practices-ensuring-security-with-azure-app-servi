@@ -1,4 +1,4 @@
-name: CI Validation
+name: Validate and Deploy
 
 on:
   push:
@@ -8,15 +8,16 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Install Azure Developer CLI
@@ -29,20 +30,20 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Initialize AZD environment
+      - name: Initialize AZD Environment
         run: azd init -e sample-ci-${{ github.run_id }} -l eastus2 --no-prompt
 
-      - name: Provision Azure resources
+      - name: Provision Azure Resources
         run: azd provision --no-prompt
 
-      - name: Deploy application
+      - name: Deploy Application
         run: azd deploy --no-prompt
 
-      - name: Validate deployment
+      - name: Validate Deployment
         run: |
-          APP_URL=$(azd env get-values --query "WEBAPP_ENDPOINT" -o tsv)
-          curl -sf $APP_URL | grep 'Hello, secure world!'
+          APP_URL=$(azd env get-values --query "APP_SERVICE_URL" --output tsv)
+          curl -sf $APP_URL || exit 1
 
-      - name: Cleanup resources
+      - name: Cleanup Resources
         if: always()
         run: azd down --force --purge --no-prompt
