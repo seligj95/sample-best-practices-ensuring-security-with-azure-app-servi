@@ -1,0 +1,8 @@
+{
+  "location": {
+    "value": "eastus2"
+  },
+  "environmentName": {
+    "value": "azure-code-signing-demo"
+  }
+}
