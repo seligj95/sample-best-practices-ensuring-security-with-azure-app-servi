@@ -1,31 +1,32 @@
 param location string = 'eastus2'
 param environmentName string
 
-resource appServicePlan 'Microsoft.Web/serverfarms@2022-03-01' = {
-  name: '${environmentName}-asp'
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
+  name: '${environmentName}-appservice-plan'
   location: location
   sku: {
-    name: 'F1'
-    tier: 'Free'
+    name: 'B1'
+    tier: 'Basic'
   }
 }
 
-resource webApp 'Microsoft.Web/sites@2022-03-01' = {
-  name: '${environmentName}-web'
+resource webApp 'Microsoft.Web/sites@2022-09-01' = {
+  name: '${environmentName}-webapp'
   location: location
-  serverFarmId: appServicePlan.id
   identity: {
     type: 'SystemAssigned'
   }
+  properties: {
+    serverFarmId: appServicePlan.id
+  }
 }
 
-resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
-  name: '${environmentName}-kv'
+resource keyVault 'Microsoft.KeyVault/vaults@2022-11-01' = {
+  name: '${environmentName}-keyvault'
   location: location
   properties: {
     sku: {
       name: 'standard'
-      family: 'A'
     }
     tenantId: subscription().tenantId
     accessPolicies: []
