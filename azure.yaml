@@ -1,6 +1,11 @@
-name: secure-windows-apps
+name: secure-windows-apps-code-signing
 location: eastus2
 services:
-  webapp:
+  web:
     project: src
     language: nodejs
+    host: appservice
+    azure:
+      resourceGroup: ${AZURE_ENV_NAME}-rg
+      appServicePlan: ${AZURE_ENV_NAME}-asp
+      webApp: ${AZURE_ENV_NAME}-web
