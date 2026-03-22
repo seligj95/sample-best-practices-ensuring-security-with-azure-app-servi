@@ -1,0 +1,3 @@
+name: azure-code-signing-demo
+location: eastus2
+environment: dev
